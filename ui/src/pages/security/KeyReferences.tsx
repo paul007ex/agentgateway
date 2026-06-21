@@ -17,8 +17,8 @@ export function KeyReferencesPage() {
   return (
     <div className="page-stack">
       <PageHeader
-        title="Key References"
-        description="Review reusable key references for STS client authentication and actor assertions."
+        title="Key Management"
+        description="Review reusable signing keys, trust roots, and secret handles for STS client authentication and actor assertions."
       />
 
       {config.isError ? (
@@ -34,12 +34,12 @@ export function KeyReferencesPage() {
 
       <Panel>
         {config.isLoading ? (
-          <StatusBanner state="loading" title="Loading key references" />
+          <StatusBanner state="loading" title="Loading key material" />
         ) : keyRefs ? (
           <YamlBlock value={keyRefs} />
         ) : (
           <EmptyState
-            title="No key references configured"
+            title="No key material configured"
             description="This page will own reusable references for signing keys, trust roots, and future secret handles."
             action={<Link to="/raw-config">Open Raw Configuration</Link>}
           />

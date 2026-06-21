@@ -229,7 +229,7 @@ export function TokenExchangePage() {
   return (
     <div className="page-stack">
       <PageHeader
-        title="Token Exchange"
+        title="Secure Token Exchange"
         description="Configure reusable STS token exchange profiles for MCP backend credential replacement."
         actions={
           <button className="button primary" type="button" disabled>

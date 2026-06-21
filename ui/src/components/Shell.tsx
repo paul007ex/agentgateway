@@ -229,17 +229,17 @@ function navigationGroups(options: {
       items: [
         {
           to: "/security/key-references",
-          label: "Key References",
+          label: "Key Management",
           icon: KeyRound,
         },
         {
           to: "/security/pdp-profiles",
-          label: "PDP Profiles",
+          label: "Authorization Profiles",
           icon: ShieldCheck,
         },
         {
           to: "/security/token-exchange",
-          label: "Token Exchange",
+          label: "Secure Token Exchange",
           icon: Fingerprint,
         },
         {

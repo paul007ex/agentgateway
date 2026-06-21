@@ -17,8 +17,8 @@ export function PdpProfilesPage() {
   return (
     <div className="page-stack">
       <PageHeader
-        title="PDP Profiles"
-        description="Review reusable policy decision provider profiles for exchange-aware MCP authorization."
+        title="Authorization Profiles"
+        description="Review reusable authorization decision profiles for exchange-aware MCP access control."
       />
 
       {config.isError ? (
@@ -28,20 +28,20 @@ export function PdpProfilesPage() {
       ) : null}
 
       <StatusBanner state="info" title="Read-only planning page">
-        This page is the future home for local and external PDP profile wiring.
-        Runtime authorization still uses existing MCP authorization until the
-        normalized decision contract is implemented.
+        This page is the future home for local authorization and external
+        decision-provider wiring. Runtime authorization still uses existing MCP
+        authorization until the normalized decision contract is implemented.
       </StatusBanner>
 
       <Panel>
         {config.isLoading ? (
-          <StatusBanner state="loading" title="Loading PDP profiles" />
+          <StatusBanner state="loading" title="Loading authorization profiles" />
         ) : pdp ? (
           <YamlBlock value={pdp} />
         ) : (
           <EmptyState
-            title="No PDP profiles configured"
-            description="This page will own pdp.profiles and expose fail-closed readiness for local and external policy providers."
+            title="No authorization profiles configured"
+            description="This page will own authorization profiles and expose fail-closed readiness for local and external policy providers."
             action={<Link to="/raw-config">Open Raw Configuration</Link>}
           />
         )}

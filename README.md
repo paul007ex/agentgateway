@@ -187,9 +187,9 @@ Current MintAI-specific UI surfaces:
 
 ```text
 Security
-  Key References
-  PDP Profiles
-  Token Exchange
+  Key Management
+  Authorization Profiles
+  Secure Token Exchange
 
 MCP
   Servers
