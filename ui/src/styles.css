@@ -3894,7 +3894,10 @@ textarea {
 .scenario-row-main {
   grid-template-columns:
     minmax(110px, 1fr) auto minmax(120px, 1fr) auto minmax(130px, 1fr)
-    auto minmax(150px, 1.2fr) auto minmax(95px, 0.8fr);
+    auto minmax(150px, 1.2fr) auto minmax(95px, 0.8fr) auto minmax(
+      130px,
+      1fr
+    );
 }
 
 .scenario-row-exchange {
@@ -3997,75 +4000,6 @@ textarea {
 .scenario-diagram-legend i.deny {
   border-color: color-mix(in srgb, var(--bad) 40%, var(--line));
   background: var(--bad-bg);
-}
-
-.security-flow-strip {
-  display: grid;
-  grid-template-columns: minmax(130px, 1fr) auto minmax(130px, 1fr) auto minmax(
-      130px,
-      1fr
-    ) auto minmax(130px, 1fr);
-  align-items: stretch;
-  gap: 8px;
-}
-
-.security-flow-strip > svg {
-  align-self: center;
-  color: var(--muted);
-}
-
-.security-flow-step {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 8px;
-  align-items: center;
-  min-width: 0;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--surface);
-  box-shadow: var(--shadow);
-  padding: 10px;
-}
-
-.security-flow-step.ok,
-.security-flow-step.allow {
-  border-color: color-mix(in srgb, var(--ok) 35%, var(--line));
-  background: var(--ok-bg);
-}
-
-.security-flow-step.challenge {
-  border-color: color-mix(in srgb, var(--warn) 35%, var(--line));
-  background: var(--warn-bg);
-}
-
-.security-flow-step.deny,
-.security-flow-step.error {
-  border-color: color-mix(in srgb, var(--bad) 35%, var(--line));
-  background: var(--bad-bg);
-}
-
-.security-flow-step.skipped {
-  background: var(--surface-2);
-}
-
-.security-flow-step span {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.security-flow-step strong {
-  font-size: 13px;
-}
-
-.security-flow-step small {
-  overflow: hidden;
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 600;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .security-preview-grid {
@@ -5971,14 +5905,6 @@ details summary {
   .scenario-arrow {
     justify-self: center;
     transform: rotate(90deg);
-  }
-
-  .security-flow-strip {
-    grid-template-columns: 1fr;
-  }
-
-  .security-flow-strip > svg {
-    display: none;
   }
 
   .log-call-summary {

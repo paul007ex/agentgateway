@@ -203,6 +203,15 @@ export function effectivePlanPreview(args: {
       sub: args.userSub,
       client_id: args.clientId,
     },
+    grant: {
+      provider: "local",
+      grantRef: args.selectedServer.grantRef,
+      status: args.terminalDecision
+        ? args.decision === "challenge"
+          ? "required"
+          : "not_evaluated"
+        : "valid",
+    },
     actor: args.terminalDecision
       ? undefined
       : args.exchangeFlow === "delegation"

@@ -1,10 +1,3 @@
-import {
-  AlertTriangle,
-  ArrowRight,
-  CheckCircle2,
-  ShieldCheck,
-  XCircle,
-} from "lucide-react";
 import type { ReactNode } from "react";
 import { Panel, YamlBlock } from "../../components/Primitives";
 import type { McpServer } from "./securityPlaygroundModel";
@@ -20,31 +13,8 @@ type Props = {
 };
 
 export function SecurityPreviewPanels(props: Props) {
-  const terminalDecision = props.decision !== "allow";
   return (
     <>
-      <div className="security-flow-strip" aria-label="Security flow">
-        <FlowStep title="AuthN" state="ok" description="validate token" />
-        <ArrowRight size={16} />
-        <FlowStep
-          title="PDP"
-          state={props.decision === "allow" ? "ok" : props.decision}
-          description={props.decision}
-        />
-        <ArrowRight size={16} />
-        <FlowStep
-          title="STS"
-          state={terminalDecision ? "skipped" : "ok"}
-          description={terminalDecision ? "skipped" : props.exchangeFlow}
-        />
-        <ArrowRight size={16} />
-        <FlowStep
-          title="Backend"
-          state={terminalDecision ? "skipped" : "ok"}
-          description={terminalDecision ? "skipped" : "validate token"}
-        />
-      </div>
-
       {props.commandSlot}
 
       <div className="security-preview-grid">
@@ -99,6 +69,16 @@ export function ScenarioDiagram(props: {
   const stsEndpointDetail = terminalDecision
     ? "skipped"
     : shortValue(props.stsEndpoint);
+  const consentState = terminalDecision
+    ? props.decision === "challenge"
+      ? "challenge"
+      : "skipped"
+    : "ok";
+  const consentDetail = terminalDecision
+    ? props.decision === "challenge"
+      ? "grant required"
+      : "not evaluated"
+    : "grant valid";
   return (
     <Panel className="scenario-diagram-card">
       <div className="section-heading-row">
@@ -119,6 +99,12 @@ export function ScenarioDiagram(props: {
             title="MintAI"
             detail={props.selectedServer.route}
             state="ok"
+          />
+          <ScenarioArrow />
+          <ScenarioNode
+            title="Consent / grant"
+            detail={consentDetail}
+            state={consentState}
           />
           <ScenarioArrow />
           <ScenarioNode title="PDP" detail={props.decision} state={pdpState} />
@@ -180,30 +166,6 @@ function ScenarioArrow() {
 function shortValue(value: string) {
   if (value.length <= 34) return value;
   return `${value.slice(0, 31)}...`;
-}
-
-function FlowStep(props: {
-  title: string;
-  description: string;
-  state: string;
-}) {
-  const Icon =
-    props.state === "ok" || props.state === "allow"
-      ? CheckCircle2
-      : props.state === "challenge"
-        ? AlertTriangle
-        : props.state === "skipped"
-          ? ShieldCheck
-          : XCircle;
-  return (
-    <div className={`security-flow-step ${props.state}`}>
-      <Icon size={16} />
-      <span>
-        <strong>{props.title}</strong>
-        <small>{props.description}</small>
-      </span>
-    </div>
-  );
 }
 
 function PreviewPanel(props: {
