@@ -82,6 +82,7 @@ export function ScenarioDiagram(props: {
     : props.grantProvider === "external"
       ? "external + local"
       : "local grant valid";
+  const showExternalConsent = props.grantProvider === "external";
   return (
     <Panel className="scenario-diagram-card">
       <div className="section-heading-row">
@@ -112,6 +113,34 @@ export function ScenarioDiagram(props: {
           <ScenarioArrow />
           <ScenarioNode title="PDP" detail={props.decision} state={pdpState} />
         </div>
+
+        {showExternalConsent ? (
+          <div className="scenario-row scenario-row-consent">
+            <ScenarioNode
+              title="Metadata"
+              detail="RFC 9728"
+              state={terminalDecision ? "challenge" : "ok"}
+            />
+            <ScenarioArrow />
+            <ScenarioNode
+              title="quconsent"
+              detail="auth-code + PKCE"
+              state={terminalDecision ? "challenge" : "ok"}
+            />
+            <ScenarioArrow />
+            <ScenarioNode
+              title="Enterprise IdP"
+              detail="login / MFA"
+              state={terminalDecision ? "challenge" : "ok"}
+            />
+            <ScenarioArrow />
+            <ScenarioNode
+              title="Grant decision"
+              detail={terminalDecision ? "not satisfied" : "opaque grant"}
+              state={terminalDecision ? "challenge" : "ok"}
+            />
+          </div>
+        ) : null}
 
         <div className="scenario-row scenario-row-exchange">
           <ScenarioNode

@@ -3907,6 +3907,13 @@ textarea {
   margin-left: clamp(80px, 12vw, 220px);
 }
 
+.scenario-row-consent {
+  grid-template-columns:
+    minmax(135px, 1fr) auto minmax(145px, 1fr) auto minmax(145px, 1fr)
+    auto minmax(150px, 1fr);
+  margin-left: clamp(150px, 24vw, 420px);
+}
+
 .scenario-node {
   display: flex;
   min-width: 0;
@@ -5894,11 +5901,13 @@ details summary {
 
   .scenario-row,
   .scenario-row-main,
-  .scenario-row-exchange {
+  .scenario-row-exchange,
+  .scenario-row-consent {
     grid-template-columns: 1fr;
   }
 
-  .scenario-row-exchange {
+  .scenario-row-exchange,
+  .scenario-row-consent {
     margin-left: 0;
   }
 

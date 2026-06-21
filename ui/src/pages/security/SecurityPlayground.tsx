@@ -65,8 +65,16 @@ export function SecurityPlaygroundPage() {
         audience: identity.audience,
         jwksUrl: identity.jwksUrl,
         scopes: identity.scopes,
+        grantProvider,
       }),
-    [identity.audience, identity.issuer, identity.jwksUrl, identity.scopes, selectedServer],
+    [
+      grantProvider,
+      identity.audience,
+      identity.issuer,
+      identity.jwksUrl,
+      identity.scopes,
+      selectedServer,
+    ],
   );
   const exchangeForm = useMemo(
     () =>

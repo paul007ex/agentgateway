@@ -10,6 +10,7 @@ export const clientAssertionJwtBearer =
 
 const oktaIssuer =
   "https://trial-5395738.okta.com/oauth2/aus13u46is3QfakEx698";
+const quconsentAuthorizationServer = "https://quconsent.internal";
 
 export const defaultIdentity = {
   issuer: oktaIssuer,
@@ -145,6 +146,7 @@ export function routePreview(args: {
   audience: string;
   jwksUrl: string;
   scopes: string;
+  grantProvider: string;
 }) {
   return {
     route: args.selectedServer.route,
@@ -157,6 +159,10 @@ export function routePreview(args: {
       jwks: { url: args.jwksUrl },
       resourceMetadata: {
         resource: args.selectedServer.resource,
+        authorizationServers:
+          args.grantProvider === "external"
+            ? [quconsentAuthorizationServer]
+            : [args.issuer],
         scopesSupported: args.scopes.split(/\s+/),
         bearerMethodsSupported: ["header"],
       },
@@ -220,6 +226,15 @@ export function effectivePlanPreview(args: {
     grant: {
       source: args.grantProvider,
       localPolicy: "mcpAuthorizationMatrix",
+      externalProvider:
+        args.grantProvider === "external"
+          ? {
+              type: "nativeMcpOAuth",
+              authorizationServer: quconsentAuthorizationServer,
+              flow: "authorization_code_pkce_s256",
+              grantMode: "server_side_opaque_grant",
+            }
+          : undefined,
       grantRef: args.selectedServer.grantRef,
       status: args.terminalDecision
         ? args.decision === "challenge"
