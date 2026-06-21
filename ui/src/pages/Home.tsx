@@ -110,11 +110,11 @@ export function HomePage() {
           onClick={(event) => event.stopPropagation()}
         >
           <div className="startup-copy">
-            <h2 id="startup-title">Welcome to Agentgateway</h2>
+            <h2 id="startup-title">Welcome to MintGateway</h2>
             <p>
-              Agentgateway is a gateway that can route, secure, and observe LLM,
-              MCP, and traditional API traffic. Select one or more capabilities
-              to enable, then continue.
+              MintGateway secures MCP and AI gateway traffic with enterprise
+              authentication, authorization, and token-exchange posture. Select
+              one or more capabilities to enable, then continue.
             </p>
           </div>
 

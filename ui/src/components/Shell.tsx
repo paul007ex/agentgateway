@@ -12,6 +12,7 @@ import {
   Boxes,
   Coins,
   FileCode2,
+  Fingerprint,
   Github,
   Globe,
   Home,
@@ -32,8 +33,7 @@ import {
 import { useEffect, useState } from "react";
 import { Tooltip, useDismissiblePopover } from "./Primitives";
 import { useConfigDumpMode, useGatewayConfig } from "../hooks";
-import logoDark from "../assets/agw-dark.svg";
-import logoLight from "../assets/agw-light.svg";
+import mintGatewayMark from "../assets/mintgateway-mark.svg";
 
 type NavItemConfig = {
   to: string;
@@ -113,17 +113,17 @@ export function Shell() {
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <Link to="/" className="brand" aria-label="agentgateway home">
+        <Link to="/" className="brand" aria-label="MintGateway home">
           <img
-            className="brand-logo brand-logo-light"
-            src={logoLight}
-            alt="agentgateway"
+            className="brand-mark"
+            src={mintGatewayMark}
+            alt=""
+            aria-hidden="true"
           />
-          <img
-            className="brand-logo brand-logo-dark"
-            src={logoDark}
-            alt="agentgateway"
-          />
+          <span className="brand-copy">
+            <strong>MintGateway</strong>
+            <small>Auth gateway</small>
+          </span>
         </Link>
         <nav className="nav-list" aria-label="Primary">
           {navGroups.map((group) => (
@@ -225,6 +225,31 @@ function navigationGroups(options: {
   ];
   if (!options.dumpMode) {
     groups.push({
+      title: "Security",
+      items: [
+        {
+          to: "/security/key-references",
+          label: "Key References",
+          icon: KeyRound,
+        },
+        {
+          to: "/security/pdp-profiles",
+          label: "PDP Profiles",
+          icon: ShieldCheck,
+        },
+        {
+          to: "/security/token-exchange",
+          label: "Token Exchange",
+          icon: Fingerprint,
+        },
+        {
+          to: "/security/playground",
+          label: "Security Playground",
+          icon: Play,
+        },
+      ],
+    });
+    groups.push({
       title: "LLM",
       items: options.hasLlm
         ? [
@@ -272,6 +297,11 @@ function navigationGroups(options: {
         ? [
             { to: "/mcp/servers", label: "Servers", icon: Server },
             { to: "/mcp/policies", label: "Policies", icon: ShieldCheck },
+            {
+              to: "/mcp/authorization",
+              label: "Authorization Matrix",
+              icon: Fingerprint,
+            },
             { to: "/mcp/playground", label: "Tool Playground", icon: Play },
           ]
         : [
@@ -398,6 +428,7 @@ function MobileNavItem(props: {
 
 function eyebrowForPath(path: string) {
   if (path === "/") return "Gateway overview";
+  if (path.startsWith("/security")) return "Security configuration";
   if (path.startsWith("/mcp")) return "MCP configuration";
   if (path.startsWith("/traffic")) return "Traffic configuration";
   if (path.startsWith("/cel") || path.startsWith("/raw-config"))

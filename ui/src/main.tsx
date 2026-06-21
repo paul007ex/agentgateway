@@ -28,6 +28,11 @@ import { ModelsPage } from "./pages/Models";
 import { McpPoliciesPage, PoliciesPage } from "./pages/Policies";
 import { PlaygroundPage } from "./pages/Playground";
 import { ProvidersPage } from "./pages/Providers";
+import { McpAuthorizationMatrixPage } from "./pages/McpAuthorizationMatrix";
+import { KeyReferencesPage } from "./pages/security/KeyReferences";
+import { PdpProfilesPage } from "./pages/security/PdpProfiles";
+import { SecurityPlaygroundPage } from "./pages/security/SecurityPlayground";
+import { TokenExchangePage } from "./pages/security/TokenExchange";
 import { TrafficListenersPage } from "./pages/TrafficListeners";
 import { TrafficRoutesPage } from "./pages/TrafficRoutes";
 import "@fontsource/geist-sans/latin-400.css";
@@ -137,6 +142,12 @@ const mcpPoliciesRoute = createRoute({
   component: McpPoliciesPage,
 });
 
+const mcpAuthorizationMatrixRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/mcp/authorization",
+  component: McpAuthorizationMatrixPage,
+});
+
 const mcpGetStartedRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/mcp/get-started",
@@ -165,6 +176,30 @@ const trafficRoutesRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/traffic/routes",
   component: TrafficRoutesPage,
+});
+
+const securityKeyReferencesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/security/key-references",
+  component: KeyReferencesPage,
+});
+
+const securityPdpProfilesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/security/pdp-profiles",
+  component: PdpProfilesPage,
+});
+
+const securityTokenExchangeRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/security/token-exchange",
+  component: TokenExchangePage,
+});
+
+const securityPlaygroundRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/security/playground",
+  component: SecurityPlaygroundPage,
 });
 
 const celRoute = createRoute({
@@ -209,9 +244,14 @@ const router = createRouter({
     keysRoute,
     playgroundRoute,
     clientSetupRoute,
+    securityKeyReferencesRoute,
+    securityPdpProfilesRoute,
+    securityTokenExchangeRoute,
+    securityPlaygroundRoute,
     mcpGetStartedRoute,
     mcpServersRoute,
     mcpPoliciesRoute,
+    mcpAuthorizationMatrixRoute,
     mcpPlaygroundRoute,
     trafficGetStartedRoute,
     trafficListenersRoute,
