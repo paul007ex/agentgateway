@@ -2,6 +2,7 @@ import { Dropdown, Field, FieldGroup, Panel } from "../../components/Primitives"
 import {
   decisionOptions,
   exchangeFlowOptions,
+  grantProviderOptions,
   mcpServers,
   type IdentityConfig,
 } from "./securityPlaygroundModel";
@@ -13,6 +14,8 @@ type Props = {
   setExchangeFlow: (value: string) => void;
   decision: string;
   setDecision: (value: string) => void;
+  grantProvider: string;
+  setGrantProvider: (value: string) => void;
   gatewayBaseUrl: string;
   setGatewayBaseUrl: (value: string) => void;
   stsEndpoint: string;
@@ -70,6 +73,15 @@ export function SecurityScenarioPanel(props: Props) {
             value={props.decision}
             options={[...decisionOptions]}
             onChange={props.setDecision}
+            showSelectedDescription
+          />
+        </FieldGroup>
+        <FieldGroup label="Grant source">
+          <Dropdown
+            ariaLabel="Grant source"
+            value={props.grantProvider}
+            options={[...grantProviderOptions]}
+            onChange={props.setGrantProvider}
             showSelectedDescription
           />
         </FieldGroup>

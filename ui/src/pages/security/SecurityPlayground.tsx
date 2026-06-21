@@ -10,6 +10,7 @@ import {
   defaultIdentity,
   effectivePlanPreview,
   exchangeFormPreview,
+  grantProviderOptions,
   identityFromConfig,
   mcpServers,
   routePreview,
@@ -20,6 +21,9 @@ export function SecurityPlaygroundPage() {
   const [mcpServerId, setMcpServerId] = useState<string>(mcpServers[0].id);
   const [exchangeFlow, setExchangeFlow] = useState("delegation");
   const [decision, setDecision] = useState("allow");
+  const [grantProvider, setGrantProvider] = useState<string>(
+    grantProviderOptions[0].value,
+  );
   const [userSub, setUserSub] = useState("user@example.com");
   const [clientId, setClientId] = useState("claude-desktop");
   const [gatewayBaseUrl, setGatewayBaseUrl] = useState("http://localhost:3000");
@@ -85,6 +89,7 @@ export function SecurityPlaygroundPage() {
         clientId,
         exchangeFlow,
         gatewayActor,
+        grantProvider,
         selectedServer,
         scopes: identity.scopes,
       }),
@@ -93,6 +98,7 @@ export function SecurityPlaygroundPage() {
       decision,
       exchangeFlow,
       gatewayActor,
+      grantProvider,
       identity.audience,
       identity.issuer,
       identity.scopes,
@@ -154,6 +160,7 @@ export function SecurityPlaygroundPage() {
         issuer={identity.issuer}
         stsEndpoint={stsEndpoint}
         gatewayActor={gatewayActor}
+        grantProvider={grantProvider}
         userSub={userSub}
       />
 
@@ -164,6 +171,8 @@ export function SecurityPlaygroundPage() {
         setExchangeFlow={setExchangeFlow}
         decision={decision}
         setDecision={setDecision}
+        grantProvider={grantProvider}
+        setGrantProvider={setGrantProvider}
         gatewayBaseUrl={gatewayBaseUrl}
         setGatewayBaseUrl={setGatewayBaseUrl}
         stsEndpoint={stsEndpoint}

@@ -45,6 +45,7 @@ export function ScenarioDiagram(props: {
   issuer: string;
   stsEndpoint: string;
   gatewayActor: string;
+  grantProvider: string;
   userSub: string;
 }) {
   const terminalDecision = props.decision !== "allow";
@@ -78,7 +79,9 @@ export function ScenarioDiagram(props: {
     ? props.decision === "challenge"
       ? "grant required"
       : "not evaluated"
-    : "grant valid";
+    : props.grantProvider === "external"
+      ? "external + local"
+      : "local grant valid";
   return (
     <Panel className="scenario-diagram-card">
       <div className="section-heading-row">

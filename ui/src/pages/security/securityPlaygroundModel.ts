@@ -80,6 +80,19 @@ export const exchangeFlowOptions = [
   },
 ] as const;
 
+export const grantProviderOptions = [
+  {
+    value: "local",
+    label: "Local matrix",
+    description: "Use configured MCP Authorization Matrix grants.",
+  },
+  {
+    value: "external",
+    label: "External + local",
+    description: "Use external MCP OAuth grants plus local matrix policy.",
+  },
+] as const;
+
 export type McpServer = (typeof mcpServers)[number];
 
 export type CommandRecipe = {
@@ -191,6 +204,7 @@ export function effectivePlanPreview(args: {
   clientId: string;
   exchangeFlow: string;
   gatewayActor: string;
+  grantProvider: string;
   selectedServer: McpServer;
   scopes: string;
 }) {
@@ -204,7 +218,8 @@ export function effectivePlanPreview(args: {
       client_id: args.clientId,
     },
     grant: {
-      provider: "local",
+      source: args.grantProvider,
+      localPolicy: "mcpAuthorizationMatrix",
       grantRef: args.selectedServer.grantRef,
       status: args.terminalDecision
         ? args.decision === "challenge"
