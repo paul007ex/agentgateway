@@ -71,7 +71,7 @@ export const exchangeFlowOptions = [
   {
     value: "delegation",
     label: "Delegation",
-    description: "Preserve sub as the user and emit act for MintGateway.",
+    description: "Preserve sub as the user and emit act for MintAI.",
   },
   {
     value: "impersonation",
@@ -164,7 +164,7 @@ export function exchangeFormPreview(args: {
   const actorFields =
     args.exchangeFlow === "delegation"
       ? {
-          actor_token: "$MINTGATEWAY_ACTOR_ASSERTION",
+          actor_token: "$MINTAI_ACTOR_ASSERTION",
           actor_token_type: jwtTokenType,
         }
       : {};
@@ -172,7 +172,7 @@ export function exchangeFormPreview(args: {
     grant_type: tokenExchangeGrant,
     client_id: args.gatewayClientId,
     client_assertion_type: clientAssertionJwtBearer,
-    client_assertion: "$MINTGATEWAY_CLIENT_ASSERTION",
+    client_assertion: "$MINTAI_CLIENT_ASSERTION",
     subject_token: "$OKTA_ACCESS_TOKEN",
     subject_token_type: tokenTypeAccessToken,
     ...actorFields,
@@ -244,7 +244,7 @@ export function commandRecipes(args: {
   const actorParams =
     args.exchangeFlow === "delegation"
       ? ` \\
-  --data-urlencode "actor_token=$MINTGATEWAY_ACTOR_ASSERTION" \\
+  --data-urlencode "actor_token=$MINTAI_ACTOR_ASSERTION" \\
   --data-urlencode "actor_token_type=${jwtTokenType}"`
       : "";
   return [
@@ -331,17 +331,17 @@ PY`,
       id: "08-mcp-initialize",
       title: "08 MCP initialize",
       description: "Initialize an MCP session through the gateway with an inbound user token.",
-      code: `curl -sS -D /tmp/mintgateway-mcp.headers \\
-  -o /tmp/mintgateway-mcp-initialize.json \\
+      code: `curl -sS -D /tmp/mintai-mcp.headers \\
+  -o /tmp/mintai-mcp-initialize.json \\
   -X POST ${JSON.stringify(`${gateway}${args.route}`)} \\
   -H "content-type: application/json" \\
   -H "authorization: Bearer $OKTA_ACCESS_TOKEN" \\
   -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"curl","version":"1.0.0"}}}'
 
-cat /tmp/mintgateway-mcp-initialize.json
+cat /tmp/mintai-mcp-initialize.json
 export MCP_SESSION_ID="$(
   awk 'tolower($1)=="mcp-session-id:" { gsub("\\r", "", $2); print $2 }' \\
-    /tmp/mintgateway-mcp.headers
+    /tmp/mintai-mcp.headers
 )"
 printf 'MCP_SESSION_ID=%s\\n' "$MCP_SESSION_ID"`,
     },
@@ -364,7 +364,7 @@ printf 'MCP_SESSION_ID=%s\\n' "$MCP_SESSION_ID"`,
   --data-urlencode "grant_type=${tokenExchangeGrant}" \\
   --data-urlencode "client_id=${args.gatewayClientId}" \\
   --data-urlencode "client_assertion_type=${clientAssertionJwtBearer}" \\
-  --data-urlencode "client_assertion=$MINTGATEWAY_CLIENT_ASSERTION" \\
+  --data-urlencode "client_assertion=$MINTAI_CLIENT_ASSERTION" \\
   --data-urlencode "subject_token=$OKTA_ACCESS_TOKEN" \\
   --data-urlencode "subject_token_type=${tokenTypeAccessToken}"${actorParams} \\
   --data-urlencode "requested_token_type=${tokenTypeAccessToken}" \\

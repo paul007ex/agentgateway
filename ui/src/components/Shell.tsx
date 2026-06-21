@@ -33,7 +33,7 @@ import {
 import { useEffect, useState } from "react";
 import { Tooltip, useDismissiblePopover } from "./Primitives";
 import { useConfigDumpMode, useGatewayConfig } from "../hooks";
-import mintGatewayMark from "../assets/mintgateway-mark.svg";
+import mintAiMark from "../assets/mintai-mark.svg";
 
 type NavItemConfig = {
   to: string;
@@ -113,16 +113,16 @@ export function Shell() {
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <Link to="/" className="brand" aria-label="MintGateway home">
+        <Link to="/" className="brand" aria-label="MintAI home">
           <img
             className="brand-mark"
-            src={mintGatewayMark}
+            src={mintAiMark}
             alt=""
             aria-hidden="true"
           />
           <span className="brand-copy">
-            <strong>MintGateway</strong>
-            <small>Auth gateway</small>
+            <strong>MintAI</strong>
+            <small>Agent Gateway</small>
           </span>
         </Link>
         <nav className="nav-list" aria-label="Primary">

@@ -33,8 +33,8 @@ export function SecurityPlaygroundPage() {
     defaultIdentity.oktaClientId,
   );
   const [redirectUri, setRedirectUri] = useState(defaultIdentity.redirectUri);
-  const [gatewayClientId, setGatewayClientId] = useState("mintgateway");
-  const [gatewayActor, setGatewayActor] = useState("mintgateway");
+  const [gatewayClientId, setGatewayClientId] = useState("mintai");
+  const [gatewayActor, setGatewayActor] = useState("mintai");
   const [recipeId, setRecipeId] = useState("01-okta-discovery");
 
   const selectedServer =

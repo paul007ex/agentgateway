@@ -110,9 +110,9 @@ export function HomePage() {
           onClick={(event) => event.stopPropagation()}
         >
           <div className="startup-copy">
-            <h2 id="startup-title">Welcome to MintGateway</h2>
+            <h2 id="startup-title">Welcome to MintAI</h2>
             <p>
-              MintGateway secures MCP and AI gateway traffic with enterprise
+              MintAI secures MCP and AI gateway traffic with enterprise
               authentication, authorization, and token-exchange posture. Select
               one or more capabilities to enable, then continue.
             </p>

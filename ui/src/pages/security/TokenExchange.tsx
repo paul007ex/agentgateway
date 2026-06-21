@@ -69,14 +69,10 @@ export function TokenExchangePage() {
   const [subjectJwksUrl, setSubjectJwksUrl] = useState<string>(
     idpPresets[0].subjectJwksUrl,
   );
-  const [clientId, setClientId] = useState<string>("mintgateway");
+  const [clientId, setClientId] = useState<string>("mintai");
   const [keyRef, setKeyRef] = useState<string>("gateway-signing-key");
-  const [actorIssuer, setActorIssuer] = useState<string>(
-    "mintgateway",
-  );
-  const [actorSubject, setActorSubject] = useState<string>(
-    "mintgateway",
-  );
+  const [actorIssuer, setActorIssuer] = useState<string>("mintai");
+  const [actorSubject, setActorSubject] = useState<string>("mintai");
   const [actorSource, setActorSource] = useState<string>(
     "selfIssuedActorAssertion",
   );
@@ -280,7 +276,7 @@ export function TokenExchangePage() {
                     value: "gatewayExchange",
                     label: "Gateway exchange",
                     description:
-                      "MintGateway exchanges the subject token through STS.",
+                      "MintAI exchanges the subject token through STS.",
                   },
                   {
                     value: "adapterLowerAssurance",
@@ -309,7 +305,7 @@ export function TokenExchangePage() {
 
           <div className="section-heading compact">
             <h3>Subject Token</h3>
-            <p>Inbound IdP token claims MintGateway validates before exchange.</p>
+            <p>Inbound IdP token claims MintAI validates before exchange.</p>
           </div>
           <div className="form-grid">
             <Field label="Accepted subject issuer">
@@ -340,7 +336,7 @@ export function TokenExchangePage() {
 
           <div className="section-heading compact">
             <h3>Client Authentication</h3>
-            <p>MintGateway authenticates to the STS with private_key_jwt.</p>
+            <p>MintAI authenticates to the STS with private_key_jwt.</p>
           </div>
           <div className="form-grid">
             <Field label="Client ID">
@@ -359,7 +355,7 @@ export function TokenExchangePage() {
 
           <div className="section-heading compact">
             <h3>Actor Token</h3>
-            <p>V1 keeps sub as the user and act as the MintGateway actor.</p>
+            <p>V1 keeps sub as the user and act as the MintAI actor.</p>
           </div>
           <div className="form-grid">
             <FieldGroup label="Actor source">
@@ -370,7 +366,7 @@ export function TokenExchangePage() {
                   {
                     value: "selfIssuedActorAssertion",
                     label: "Self-issued actor assertion",
-                    description: "MintGateway signs the actor assertion.",
+                    description: "MintAI signs the actor assertion.",
                   },
                   {
                     value: "trustedGatewayActorAssertion",
@@ -399,7 +395,7 @@ export function TokenExchangePage() {
           <div className="section-heading compact">
             <h3>Transport</h3>
             <p>
-              mTLS hardens MintGateway to STS transport. It does not replace
+              mTLS hardens MintAI to STS transport. It does not replace
               private_key_jwt.
             </p>
           </div>
@@ -428,7 +424,7 @@ export function TokenExchangePage() {
             <div className="section-heading-row">
               <div>
                 <h3>Generated YAML</h3>
-                <p>Proposed MintGateway extension shape for tokenExchange.profiles.</p>
+                <p>Proposed MintAI extension shape for tokenExchange.profiles.</p>
               </div>
               <span className="badge warn">draft</span>
             </div>

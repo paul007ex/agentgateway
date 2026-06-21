@@ -1,6 +1,6 @@
-# MintGateway
+# MintAI
 
-MintGateway is a personal fork and product experiment built on Solo.io's open
+MintAI is a personal fork and product experiment built on Solo.io's open
 source `agentgateway`. The goal is narrow on purpose: make an enterprise MCP
 authentication, authorization, and token-exchange gateway that can replace
 static API-key style access with standards-shaped, scoped, auditable delegated
@@ -10,13 +10,13 @@ This repository should not expand into a full AI platform, DLP product, SIEM,
 eval system, or model governance plane. Those are valid adjacent concerns, but
 this fork's core workstream is MCP authn/authz and token minting.
 
-## What MintGateway Adds
+## What MintAI Adds
 
 Upstream `agentgateway` already provides an MCP/LLM/API gateway, admin UI,
 traffic policy model, MCP authentication support, protected-resource metadata,
 and CEL-based authorization surfaces.
 
-MintGateway extends that base toward this control model:
+MintAI extends that base toward this control model:
 
 ```text
 MCP client / agent
@@ -24,7 +24,7 @@ MCP client / agent
         | user/client token
         v
 +-------------------------------+
-| MintGateway PEP               |
+| MintAI PEP               |
 | agentgateway runtime          |
 | - authenticate inbound token   |
 | - gather request facts         |
@@ -33,7 +33,7 @@ MCP client / agent
                 |
                 v
 +-------------------------------+
-| MintGateway PDP               |
+| MintAI PDP               |
 | extended MCP authorization     |
 | allow / deny / challenge/error |
 +---------------+---------------+
@@ -70,7 +70,7 @@ sequenceDiagram
     participant Client as MCP Client / Agent
     participant IdP as Enterprise IdP<br/>Okta / Entra / Ping
     participant KGW as kgateway / Envoy<br/>Gateway API boundary
-    participant MGW as MintGateway<br/>agentgateway fork
+    participant MGW as MintAI<br/>agentgateway fork
     participant AuthN as Inbound AuthN<br/>JWT/OIDC/MCP auth
     participant PDP as MCP Authorization<br/>allow / deny / challenge / error
     participant Plan as effectiveExchangePlan<br/>registry + grants + route
@@ -98,7 +98,7 @@ sequenceDiagram
         MGW->>Plan: Resolve profile, grantRef, server posture, metadata binding
         Plan-->>MGW: Frozen effectiveExchangePlan
         MGW->>STS: RFC 8693 token exchange<br/>subject_token + actor_token + private_key_jwt
-        STS-->>MGW: Scoped backend token<br/>sub=user, act=MintGateway actor
+        STS-->>MGW: Scoped backend token<br/>sub=user, act=MintAI actor
         MGW->>MCP: MCP request with scoped token only
         MCP->>MCP: Validate iss, aud, scope, exp, sub, act
         MCP->>API: Call downstream system under approved posture
@@ -112,7 +112,7 @@ sequenceDiagram
 
 ```text
 PAP  Policy Administration Point
-     MintGateway admin UX and config/schema.
+     MintAI admin UX and config/schema.
 
 PIP  Policy Information Point
      MCP Server Registry, RFC 9728 metadata, user claims, tenant claims,
@@ -123,7 +123,7 @@ PDP  Policy Decision Point
      allow / deny / challenge / error decision.
 
 PEP  Policy Enforcement Point
-     agentgateway/MintGateway runtime. Blocks, challenges, calls STS, or forwards.
+     agentgateway/MintAI runtime. Blocks, challenges, calls STS, or forwards.
 
 STS  Security Token Service
      Mint STS / QuMint STS implementing RFC 8693 token exchange.
@@ -138,7 +138,7 @@ Canonical decision log: <https://github.com/paul007ex/agentgateway/issues/30>
 
 Current accepted decisions:
 
-- MintGateway is the MCP authn/authz/token-exchange gateway slice.
+- MintAI is the MCP authn/authz/token-exchange gateway slice.
 - PAP/PIP/PDP/PEP boundaries are explicit.
 - The v1 PDP extends agentgateway's existing MCP authorization engine.
 - PDP returns exactly `allow | deny | challenge | error`.
@@ -146,7 +146,7 @@ Current accepted decisions:
 - STS is called only after PDP allow and `effectiveExchangePlan` resolution.
 - Protected MCP backends receive only scoped exchanged tokens.
 - v1 exchanged token semantics preserve `sub` as the original user and use
-  `act` for the MintGateway/gateway actor.
+  `act` for the MintAI/gateway actor.
 - Consent, reauth, and step-up are OAuth/MCP challenge flows through the client
   and IdP, not local gateway login screens.
 - External challenge responses are `WWW-Authenticate` header-only. Detailed
@@ -158,7 +158,7 @@ Current accepted decisions:
 
 ## Standards Alignment
 
-MintGateway is intended to align with these protocol surfaces:
+MintAI is intended to align with these protocol surfaces:
 
 - MCP Authorization and MCP protected-resource behavior.
 - RFC 9728 OAuth 2.0 Protected Resource Metadata.
@@ -173,17 +173,17 @@ The important separation is:
 
 ```text
 MCP/RFC metadata = standards discovery
-MintGateway registry = enterprise trust binding
+MintAI registry = enterprise trust binding
 PDP = authorization decision
 STS = token exchange authority
 ```
 
 ## UI Direction
 
-The local UI is branded as MintGateway and uses a generic mint-green mark. It is
+The local UI is branded as MintAI and uses a generic mint-green mark. It is
 intentionally not tied to a vendor logo.
 
-Current MintGateway-specific UI surfaces:
+Current MintAI-specific UI surfaces:
 
 ```text
 Security

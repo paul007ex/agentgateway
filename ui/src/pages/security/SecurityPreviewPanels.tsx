@@ -116,7 +116,7 @@ export function ScenarioDiagram(props: {
           <ScenarioNode title="MCP Client" detail="Okta token" state="ok" />
           <ScenarioArrow />
           <ScenarioNode
-            title="MintGateway"
+            title="MintAI"
             detail={props.selectedServer.route}
             state="ok"
           />
