@@ -3,9 +3,16 @@ import { Panel, YamlBlock } from "../../components/Primitives";
 import type { McpServer } from "./securityPlaygroundModel";
 
 type Props = {
+  scenarioType: string;
   decision: string;
   exchangeFlow: string;
+  grantProvider: string;
+  issuer: string;
+  scopes: string;
   selectedServer: McpServer;
+  userSub: string;
+  clientId: string;
+  actorAgent: string;
   routePreview: unknown;
   effectivePlanPreview: unknown;
   exchangeFormPreview: unknown;
@@ -13,8 +20,84 @@ type Props = {
 };
 
 export function SecurityPreviewPanels(props: Props) {
+  const terminalDecision = props.decision !== "allow";
+  const consentScenario = props.scenarioType === "consentAndExchange";
+  const consentPreview = {
+    playflow: consentScenario ? "userConsent" : "authorizationGate",
+    scenarioType: props.scenarioType,
+    source: grantSourceLabel(props.grantProvider),
+    clientApp: props.clientId,
+    actorAgent: props.actorAgent,
+    user: props.userSub,
+    mcpServer: props.selectedServer.label,
+    routeUri: props.selectedServer.resource,
+    protectedResourceUri: props.selectedServer.resource,
+    tool: props.selectedServer.tool,
+    requestedScopes: props.scopes.split(/\s+/),
+    authorizationServer:
+      props.grantProvider === "local"
+        ? props.issuer
+        : "https://quconsent.internal",
+    enterpriseIdp: props.issuer,
+    localPolicy: "MintAI authorization matrix",
+    externalPdp:
+      props.grantProvider === "quconsentPdp"
+        ? "configured PDP adapter"
+        : undefined,
+    grantRef: props.selectedServer.grantRef,
+    requirements:
+      props.grantProvider !== "local"
+        ? [
+            "WWW-Authenticate challenge",
+            "RFC 9728 protected resource metadata",
+            "PKCE S256",
+            "no token passthrough",
+            "opaque server-side grant",
+          ]
+        : ["local authorization matrix", "no token passthrough"],
+    result: terminalDecision
+      ? props.decision === "challenge"
+        ? "grant_required"
+        : "not_evaluated"
+      : "grant_satisfied",
+  };
+  const stsPlayflow = {
+    playflow: "secureTokenExchange",
+    startsAfter: "grant satisfied + authorization allow",
+    skipped: terminalDecision,
+    exchangeFlow: props.exchangeFlow,
+    subjectToken: "$OKTA_ACCESS_TOKEN",
+    subjectPreview: { sub: props.userSub, iss: props.issuer },
+    actorToken:
+      props.exchangeFlow === "delegation" ? "$MINTAI_ACTOR_ASSERTION" : "omitted",
+    actorPreview:
+      props.exchangeFlow === "delegation"
+        ? { iss: "mintgateway", sub: props.actorAgent }
+        : undefined,
+    requestedTokenType: "access_token",
+    audience: props.selectedServer.resource,
+    scope: props.scopes,
+    backendReceives: terminalDecision
+      ? "nothing"
+      : props.exchangeFlow === "delegation"
+        ? { sub: props.userSub, act: { sub: props.actorAgent } }
+        : { sub: props.userSub, act: "omitted" },
+  };
   return (
     <>
+      <div className="security-playflow-grid">
+        <PreviewPanel
+          title="Consent / Grant Playflow"
+          badge={grantSourceLabel(props.grantProvider)}
+          value={consentPreview}
+        />
+        <PreviewPanel
+          title="STS Token Exchange Playflow"
+          badge={props.exchangeFlow}
+          value={stsPlayflow}
+        />
+      </div>
+
       {props.commandSlot}
 
       <div className="security-preview-grid">
@@ -39,12 +122,14 @@ export function SecurityPreviewPanels(props: Props) {
 }
 
 export function ScenarioDiagram(props: {
+  scenarioType: string;
   decision: string;
   exchangeFlow: string;
   selectedServer: McpServer;
   issuer: string;
   stsEndpoint: string;
   gatewayActor: string;
+  actorAgent: string;
   grantProvider: string;
   userSub: string;
 }) {
@@ -52,11 +137,6 @@ export function ScenarioDiagram(props: {
   const pdpState = props.decision === "allow" ? "ok" : props.decision;
   const downstreamState = terminalDecision ? "skipped" : "ok";
   const delegation = props.exchangeFlow === "delegation";
-  const actorState = terminalDecision
-    ? "skipped"
-    : delegation
-      ? "ok"
-      : "skipped";
   const stsDetail = terminalDecision
     ? "skipped"
     : delegation
@@ -65,11 +145,8 @@ export function ScenarioDiagram(props: {
   const outputDetail = terminalDecision
     ? "no backend token"
     : delegation
-      ? "sub=user, act=gateway"
+      ? `sub=user, act=${props.actorAgent}`
       : "sub=user, no act";
-  const stsEndpointDetail = terminalDecision
-    ? "skipped"
-    : shortValue(props.stsEndpoint);
   const consentState = terminalDecision
     ? props.decision === "challenge"
       ? "challenge"
@@ -79,10 +156,10 @@ export function ScenarioDiagram(props: {
     ? props.decision === "challenge"
       ? "grant required"
       : "not evaluated"
-    : props.grantProvider === "external"
-      ? "external + local"
-      : "local grant valid";
-  const showExternalConsent = props.grantProvider === "external";
+    : props.grantProvider === "local"
+      ? "local policy valid"
+      : grantSourceLabel(props.grantProvider);
+  const showExternalConsent = props.grantProvider !== "local";
   return (
     <Panel className="scenario-diagram-card">
       <div className="section-heading-row">
@@ -106,58 +183,20 @@ export function ScenarioDiagram(props: {
           />
           <ScenarioArrow />
           <ScenarioNode
-            title="Consent / grant"
+            title={showExternalConsent ? "quconsent grant" : "Grant check"}
             detail={consentDetail}
             state={consentState}
           />
           <ScenarioArrow />
-          <ScenarioNode title="PDP" detail={props.decision} state={pdpState} />
-        </div>
-
-        {showExternalConsent ? (
-          <div className="scenario-row scenario-row-consent">
-            <ScenarioNode
-              title="Metadata"
-              detail="RFC 9728"
-              state={terminalDecision ? "challenge" : "ok"}
-            />
-            <ScenarioArrow />
-            <ScenarioNode
-              title="quconsent"
-              detail="auth-code + PKCE"
-              state={terminalDecision ? "challenge" : "ok"}
-            />
-            <ScenarioArrow />
-            <ScenarioNode
-              title="Enterprise IdP"
-              detail="login / MFA"
-              state={terminalDecision ? "challenge" : "ok"}
-            />
-            <ScenarioArrow />
-            <ScenarioNode
-              title="Grant decision"
-              detail={terminalDecision ? "not satisfied" : "opaque grant"}
-              state={terminalDecision ? "challenge" : "ok"}
-            />
-          </div>
-        ) : null}
-
-        <div className="scenario-row scenario-row-exchange">
           <ScenarioNode
-            title="Subject token"
-            detail={`iss=${shortValue(props.issuer)}`}
-            state={terminalDecision ? "skipped" : "ok"}
-          />
-          <ScenarioArrow />
-          <ScenarioNode
-            title="Actor assertion"
-            detail={delegation ? props.gatewayActor : "omitted"}
-            state={actorState}
+            title="Authorization"
+            detail={props.decision}
+            state={pdpState}
           />
           <ScenarioArrow />
           <ScenarioNode
             title="Mint STS"
-            detail={`${stsDetail} · ${stsEndpointDetail}`}
+            detail={`${stsDetail} · ${shortValue(props.stsEndpoint)}`}
             state={downstreamState}
           />
           <ScenarioArrow />
@@ -176,6 +215,12 @@ export function ScenarioDiagram(props: {
       </div>
     </Panel>
   );
+}
+
+function grantSourceLabel(value: string) {
+  if (value === "quconsentLocal") return "quconsent + local policy";
+  if (value === "quconsentPdp") return "quconsent + external PDP";
+  return "Local Authorization Matrix";
 }
 
 function ScenarioNode(props: {

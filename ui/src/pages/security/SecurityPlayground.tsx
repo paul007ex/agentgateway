@@ -14,15 +14,19 @@ import {
   identityFromConfig,
   mcpServers,
   routePreview,
+  scenarioTypeOptions,
 } from "./securityPlaygroundModel";
 
 export function SecurityPlaygroundPage() {
   const config = useGatewayConfig();
+  const [scenarioType, setScenarioType] = useState<string>(
+    scenarioTypeOptions[1].value,
+  );
   const [mcpServerId, setMcpServerId] = useState<string>(mcpServers[0].id);
   const [exchangeFlow, setExchangeFlow] = useState("delegation");
   const [decision, setDecision] = useState("allow");
   const [grantProvider, setGrantProvider] = useState<string>(
-    grantProviderOptions[0].value,
+    grantProviderOptions[1].value,
   );
   const [userSub, setUserSub] = useState("user@example.com");
   const [clientId, setClientId] = useState("claude-desktop");
@@ -38,7 +42,8 @@ export function SecurityPlaygroundPage() {
   );
   const [redirectUri, setRedirectUri] = useState(defaultIdentity.redirectUri);
   const [gatewayClientId, setGatewayClientId] = useState("mintai");
-  const [gatewayActor, setGatewayActor] = useState("mintai");
+  const [actorAgent, setActorAgent] = useState("mintgateway");
+  const [gatewayActor, setGatewayActor] = useState("mintgateway");
   const [recipeId, setRecipeId] = useState("01-okta-discovery");
 
   const selectedServer =
@@ -96,6 +101,7 @@ export function SecurityPlaygroundPage() {
         userSub,
         clientId,
         exchangeFlow,
+        actorAgent,
         gatewayActor,
         grantProvider,
         selectedServer,
@@ -105,6 +111,7 @@ export function SecurityPlaygroundPage() {
       clientId,
       decision,
       exchangeFlow,
+      actorAgent,
       gatewayActor,
       grantProvider,
       identity.audience,
@@ -162,17 +169,21 @@ export function SecurityPlaygroundPage() {
       </StatusBanner>
 
       <ScenarioDiagram
+        scenarioType={scenarioType}
         decision={decision}
         exchangeFlow={exchangeFlow}
         selectedServer={selectedServer}
         issuer={identity.issuer}
         stsEndpoint={stsEndpoint}
         gatewayActor={gatewayActor}
+        actorAgent={actorAgent}
         grantProvider={grantProvider}
         userSub={userSub}
       />
 
       <SecurityScenarioPanel
+        scenarioType={scenarioType}
+        setScenarioType={setScenarioType}
         mcpServerId={mcpServerId}
         setMcpServerId={setMcpServerId}
         exchangeFlow={exchangeFlow}
@@ -189,6 +200,8 @@ export function SecurityPlaygroundPage() {
         setUserSub={setUserSub}
         clientId={clientId}
         setClientId={setClientId}
+        actorAgent={actorAgent}
+        setActorAgent={setActorAgent}
         gatewayClientId={gatewayClientId}
         setGatewayClientId={setGatewayClientId}
         gatewayActor={gatewayActor}
@@ -204,9 +217,16 @@ export function SecurityPlaygroundPage() {
 
       <div className="security-preview-stack">
         <SecurityPreviewPanels
+          scenarioType={scenarioType}
           decision={decision}
           exchangeFlow={exchangeFlow}
+          grantProvider={grantProvider}
+          issuer={identity.issuer}
+          scopes={identity.scopes}
           selectedServer={selectedServer}
+          userSub={userSub}
+          clientId={clientId}
+          actorAgent={actorAgent}
           routePreview={route}
           effectivePlanPreview={effectivePlan}
           exchangeFormPreview={exchangeForm}

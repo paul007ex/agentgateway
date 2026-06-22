@@ -3893,25 +3893,9 @@ textarea {
 
 .scenario-row-main {
   grid-template-columns:
-    minmax(110px, 1fr) auto minmax(120px, 1fr) auto minmax(130px, 1fr)
-    auto minmax(150px, 1.2fr) auto minmax(95px, 0.8fr) auto minmax(
-      130px,
-      1fr
-    );
-}
-
-.scenario-row-exchange {
-  grid-template-columns:
-    minmax(160px, 1fr) auto minmax(140px, 0.9fr) auto minmax(120px, 0.9fr)
-    auto minmax(160px, 1fr);
-  margin-left: clamp(80px, 12vw, 220px);
-}
-
-.scenario-row-consent {
-  grid-template-columns:
-    minmax(135px, 1fr) auto minmax(145px, 1fr) auto minmax(145px, 1fr)
-    auto minmax(150px, 1fr);
-  margin-left: clamp(150px, 24vw, 420px);
+    minmax(92px, 0.8fr) auto minmax(100px, 0.8fr) auto minmax(116px, 0.9fr)
+    auto minmax(130px, 1fr) auto minmax(128px, 1fr) auto minmax(116px, 0.9fr)
+    auto minmax(126px, 1fr) auto minmax(132px, 1fr);
 }
 
 .scenario-node {
@@ -4010,6 +3994,12 @@ textarea {
 }
 
 .security-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.security-playflow-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
@@ -5900,15 +5890,12 @@ details summary {
   }
 
   .scenario-row,
-  .scenario-row-main,
-  .scenario-row-exchange,
-  .scenario-row-consent {
+  .scenario-row-main {
     grid-template-columns: 1fr;
   }
 
-  .scenario-row-exchange,
-  .scenario-row-consent {
-    margin-left: 0;
+  .security-playflow-grid {
+    grid-template-columns: 1fr;
   }
 
   .scenario-arrow {

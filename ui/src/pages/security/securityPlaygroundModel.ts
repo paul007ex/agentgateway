@@ -81,16 +81,34 @@ export const exchangeFlowOptions = [
   },
 ] as const;
 
+export const scenarioTypeOptions = [
+  {
+    value: "tokenExchange",
+    label: "Secure token exchange",
+    description: "Focus on RFC 8693 exchange after authorization allows.",
+  },
+  {
+    value: "consentAndExchange",
+    label: "User consent + token exchange",
+    description: "Simulate quconsent/native MCP OAuth before STS exchange.",
+  },
+] as const;
+
 export const grantProviderOptions = [
   {
     value: "local",
-    label: "Local matrix",
-    description: "Use configured MCP Authorization Matrix grants.",
+    label: "Local Authorization Matrix",
+    description: "Use MintAI's configured MCP authorization matrix.",
   },
   {
-    value: "external",
-    label: "External + local",
-    description: "Use external MCP OAuth grants plus local matrix policy.",
+    value: "quconsentLocal",
+    label: "quconsent + local policy",
+    description: "Use quconsent/native MCP OAuth, then enforce local policy.",
+  },
+  {
+    value: "quconsentPdp",
+    label: "quconsent + external PDP",
+    description: "Use quconsent grants and an external PDP decision.",
   },
 ] as const;
 
@@ -160,9 +178,9 @@ export function routePreview(args: {
       resourceMetadata: {
         resource: args.selectedServer.resource,
         authorizationServers:
-          args.grantProvider === "external"
-            ? [quconsentAuthorizationServer]
-            : [args.issuer],
+          args.grantProvider === "local"
+            ? [args.issuer]
+            : [quconsentAuthorizationServer],
         scopesSupported: args.scopes.split(/\s+/),
         bearerMethodsSupported: ["header"],
       },
@@ -209,6 +227,7 @@ export function effectivePlanPreview(args: {
   userSub: string;
   clientId: string;
   exchangeFlow: string;
+  actorAgent: string;
   gatewayActor: string;
   grantProvider: string;
   selectedServer: McpServer;
@@ -225,14 +244,18 @@ export function effectivePlanPreview(args: {
     },
     grant: {
       source: args.grantProvider,
-      localPolicy: "mcpAuthorizationMatrix",
+      localPolicy: "MintAI authorization matrix",
       externalProvider:
-        args.grantProvider === "external"
+        args.grantProvider !== "local"
           ? {
               type: "nativeMcpOAuth",
               authorizationServer: quconsentAuthorizationServer,
               flow: "authorization_code_pkce_s256",
               grantMode: "server_side_opaque_grant",
+              decision:
+                args.grantProvider === "quconsentPdp"
+                  ? "externalPdp"
+                  : "localPolicy",
             }
           : undefined,
       grantRef: args.selectedServer.grantRef,
@@ -247,7 +270,7 @@ export function effectivePlanPreview(args: {
       : args.exchangeFlow === "delegation"
         ? {
             iss: args.gatewayActor,
-            sub: args.gatewayActor,
+            sub: args.actorAgent,
           }
         : undefined,
     exchange: args.terminalDecision

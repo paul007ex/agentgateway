@@ -4,10 +4,13 @@ import {
   exchangeFlowOptions,
   grantProviderOptions,
   mcpServers,
+  scenarioTypeOptions,
   type IdentityConfig,
 } from "./securityPlaygroundModel";
 
 type Props = {
+  scenarioType: string;
+  setScenarioType: (value: string) => void;
   mcpServerId: string;
   setMcpServerId: (value: string) => void;
   exchangeFlow: string;
@@ -24,6 +27,8 @@ type Props = {
   setUserSub: (value: string) => void;
   clientId: string;
   setClientId: (value: string) => void;
+  actorAgent: string;
+  setActorAgent: (value: string) => void;
   gatewayClientId: string;
   setGatewayClientId: (value: string) => void;
   gatewayActor: string;
@@ -45,6 +50,15 @@ export function SecurityScenarioPanel(props: Props) {
         <p>These values drive every preview and command.</p>
       </div>
       <div className="form-grid">
+        <FieldGroup label="Scenario type">
+          <Dropdown
+            ariaLabel="Scenario type"
+            value={props.scenarioType}
+            options={[...scenarioTypeOptions]}
+            onChange={props.setScenarioType}
+            showSelectedDescription
+          />
+        </FieldGroup>
         <FieldGroup label="Exchange flow">
           <Dropdown
             ariaLabel="Exchange flow"
@@ -67,9 +81,9 @@ export function SecurityScenarioPanel(props: Props) {
             showSelectedDescription
           />
         </FieldGroup>
-        <FieldGroup label="PDP result">
+        <FieldGroup label="Authorization result">
           <Dropdown
-            ariaLabel="PDP result"
+            ariaLabel="Authorization result"
             value={props.decision}
             options={[...decisionOptions]}
             onChange={props.setDecision}
@@ -103,10 +117,16 @@ export function SecurityScenarioPanel(props: Props) {
             onChange={(event) => props.setUserSub(event.target.value)}
           />
         </Field>
-        <Field label="Client / agent">
+        <Field label="Client app">
           <input
             value={props.clientId}
             onChange={(event) => props.setClientId(event.target.value)}
+          />
+        </Field>
+        <Field label="Actor / agent">
+          <input
+            value={props.actorAgent}
+            onChange={(event) => props.setActorAgent(event.target.value)}
           />
         </Field>
         <Field label="Gateway client ID">
@@ -122,6 +142,16 @@ export function SecurityScenarioPanel(props: Props) {
           />
         </Field>
       </div>
+      {props.exchangeFlow === "impersonation" ? (
+        <div className="status-banner warning compact-banner">
+          <strong>Impersonation is an exception path.</strong>
+          <span>
+            It can hide actor context from the backend token unless policy and
+            evidence preserve it separately. Use only when grant and admin
+            policy explicitly allow impersonation.
+          </span>
+        </div>
+      ) : null}
 
       <div className="section-heading compact">
         <h3>Identity Provider</h3>
